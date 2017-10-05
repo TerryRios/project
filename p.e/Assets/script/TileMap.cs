@@ -27,7 +27,9 @@ public class TileMap : MonoBehaviour {
 	}
 
 	public void GenerateMap(){
+		
 		currentMap = maps [mapIndex];
+		System.Random prng = new System.Random (currentMap.seed);
 		GetComponent<BoxCollider> ().size = new Vector3 (currentMap.mapSize.x * tileSize, .05f, currentMap.mapSize.y * tileSize);
 
 		allTileCoords = new List<Coord> ();
@@ -63,12 +65,12 @@ public class TileMap : MonoBehaviour {
 			obstacleMap [randomCoord.x, randomCoord.y] = true;
 			currentObstacleCount++;
 			if (randomCoord != currentMap.mapCentre && MapIsFullAccessible (obstacleMap, currentObstacleCount)) {
-
+				float obstacleHeight = Mathf.Lerp (currentMap.minObstacleHeight, currentMap.maxObstacleHeight,(float) prng.NextDouble ());
 				Vector3 obstaclePosition = CoordToPosition (randomCoord.x, randomCoord.y);
 
-				Transform newObstacle = Instantiate (obstaclePrefab, obstaclePosition + Vector3.up * .5f, Quaternion.identity) as Transform;
+				Transform newObstacle = Instantiate (obstaclePrefab, obstaclePosition + Vector3.up *obstacleHeight/2, Quaternion.identity) as Transform;
 				newObstacle.parent = mapHolder;
-				newObstacle.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
+				newObstacle.localScale = new Vector3 ((1 - outlinePercent) * tileSize,obstacleHeight,(1-outlinePercent)*tileSize);
 			} else {
 				obstacleMap [randomCoord.x, randomCoord.y] = false;
 				currentObstacleCount--;
