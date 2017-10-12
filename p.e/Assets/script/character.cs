@@ -16,6 +16,7 @@ public class character : MonoBehaviour {
 	public Vector3 _targetmove;
 	private bool _canturn;
 	private float targetAngle;
+	public bool isTalking;
 
 
 	// Use this for initialization
@@ -42,6 +43,10 @@ public class character : MonoBehaviour {
 
 	void move(){
 
+		if (isTalking) {
+			return;
+		}
+
 
 		
 		if (Input.GetKeyDown(KeyCode.W)) {
@@ -65,6 +70,10 @@ public class character : MonoBehaviour {
 	}
 		
 	void turn(){
+
+		if (isTalking) {
+			return;
+		}
 
 		if (angle == targetAngle) {
 
