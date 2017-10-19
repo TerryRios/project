@@ -25,7 +25,7 @@ public class character : MonoBehaviour {
 
 		_controller = GetComponent<CharacterController> ();
 		_targetmove = transform.position;
-		_targetmove.y = 0.5f;
+		_targetmove.y = 1.0f;
 	}
 
 	// Update is called once per frame
@@ -48,18 +48,23 @@ public class character : MonoBehaviour {
 			return;
 		}
 
+		if (transform.position == _targetmove) {
+			_cancontrol = true;
+		}
 
-		
-		if (Input.GetKeyDown(KeyCode.W)) {
+		if (_cancontrol) {
+			
+			if (Input.GetKeyDown (KeyCode.W)) {
 
-			_targetmove = transform.position + transform.forward * 2;
-
-
+				_targetmove = transform.position + transform.forward * 2;
+				_cancontrol = false;
+			}
 		}
 
 		if (Vector3.Distance (transform.position, _targetmove) > 0.1f) {
 
-			transform.position += transform.forward * Time.deltaTime;			
+			transform.position += (transform.forward * Time.deltaTime*4);
+
 		} else {
 
 
