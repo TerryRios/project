@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class character : MonoBehaviour {
 
-
 	public float _speed = 1;
 	public bool _cancontrol = true;
 	public Vector3 _moveVector;
@@ -17,12 +16,11 @@ public class character : MonoBehaviour {
 	private bool _canturn;
 	private float targetAngle;
 	public bool isTalking;
-
+	public bool _noObstacle;
 
 	// Use this for initialization
 	void Start ()
 	{
-
 		_controller = GetComponent<CharacterController> ();
 		_targetmove = transform.position;
 		_targetmove.y = 1.0f;
@@ -38,18 +36,12 @@ public class character : MonoBehaviour {
 		_controller.Move (_moveVector);
 		_moveVector.y = 0;
 		transform.LookAt (transform.position + _moveVector);
-
-
 	}
 
 	void move(){
 
 		if (isTalking) {
 			return;
-		}
-
-		if (transform.position == _targetmove) {
-			_cancontrol = true;
 		}
 
 		if (_cancontrol) {
@@ -63,28 +55,18 @@ public class character : MonoBehaviour {
 
 		if (Vector3.Distance (transform.position, _targetmove) > 0.1f) {
 
-			transform.position += (transform.forward * Time.deltaTime*4);
+			transform.position += (transform.forward * Time.deltaTime*5);
 
-		} else {
-
-
+		} else {			
 			transform.position = _targetmove;
+			_cancontrol = true;
 		}
-
-
-
 	}
 		
 	void turn(){
 
-		if (isTalking) {
+		if (isTalking&&_noObstacle) {
 			return;
-		}
-
-		if (angle == targetAngle) {
-
-			_canturn = true;
-			
 		}
 
 		if (_canturn) {
@@ -93,39 +75,31 @@ public class character : MonoBehaviour {
 
 				targetAngle += -90;
 				_canturn = false;
-
 			}
 
 			if (Input.GetButtonDown ("derecho")) {
 
 				targetAngle += 90;
 				_canturn = false;
-			}
-							
-		}
-					 										
+			}							
+		}					 										
 
 	   if (Mathf.Abs(targetAngle - angle)>5.0f) {
 			
-
 		if (targetAngle > angle) {
 
-			angle += Time.deltaTime * 160;
+			angle += Time.deltaTime * 180;
 
 		} else {
 
-			angle -= Time.deltaTime * 160;
-
+			angle -= Time.deltaTime * 180;
 		}
-
 	}
-
 		if (Mathf.Abs (targetAngle - angle) < 5.0f) {
-
 			angle = targetAngle;
+			_canturn = true;	
 		}
 
 		transform.rotation = Quaternion.Euler (0, angle, 0);
 	}
-
 }
