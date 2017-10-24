@@ -17,6 +17,7 @@ public class character : MonoBehaviour {
 	private float targetAngle;
 	public bool isTalking;
 	public bool _noObstacle;
+	public LayerMask _mask;
 
 	// Use this for initialization
 	void Start ()
@@ -25,6 +26,7 @@ public class character : MonoBehaviour {
 		_targetmove = transform.position;
 		_targetmove.y = 1.0f;
 	}
+		
 
 	// Update is called once per frame
 	void Update () {
