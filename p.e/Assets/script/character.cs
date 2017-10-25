@@ -15,9 +15,8 @@ public class character : MonoBehaviour {
 	public Vector3 _targetmove;
 	private bool _canturn;
 	private float targetAngle;
+	private bool hasKey = false;
 	public bool isTalking;
-	public bool _noObstacle;
-	public LayerMask _mask;
 
 	// Use this for initialization
 	void Start ()
@@ -40,6 +39,24 @@ public class character : MonoBehaviour {
 		transform.LookAt (transform.position + _moveVector);
 	}
 
+	void FixedUpdate(){
+
+		Vector3 detect = (transform.TransformDirection(Vector3.forward));
+
+		if (Physics.Raycast (transform.position, detect, 2.9f)) {
+			_cancontrol = false;
+		} else {
+			_cancontrol = true;
+		}
+	}
+
+	void OnTriggerEnter(Collider other){
+		if (other.gameObject.tag == "key") {
+				hasKey = true;
+				Destroy (other.gameObject);
+		}
+	}
+
 	void move(){
 
 		if (isTalking) {
@@ -55,19 +72,23 @@ public class character : MonoBehaviour {
 			}
 		}
 
-		if (Vector3.Distance (transform.position, _targetmove) > 0.1f) {
+		if (transform.position != _targetmove) {
+			if (Vector3.Distance (transform.position, _targetmove) > 0.1f) {
 
-			transform.position += (transform.forward * Time.deltaTime*5);
+				transform.position += (transform.forward * Time.deltaTime*5);
 
-		} else {			
-			transform.position = _targetmove;
-			_cancontrol = true;
+			} else {			
+				transform.position = _targetmove;
+				_cancontrol = true;
+			}
 		}
+
+
 	}
 		
 	void turn(){
 
-		if (isTalking&&_noObstacle) {
+		if (isTalking) {
 			return;
 		}
 
