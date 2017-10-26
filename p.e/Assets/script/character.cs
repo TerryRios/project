@@ -10,7 +10,6 @@ public class character : MonoBehaviour {
 	private bool _iscrouched;
 	[System.NonSerialized]
 	public float _verticalSpeed = 0;
-	private CharacterController _controller;
 	private float angle;
 	public Vector3 _targetmove;
 	private bool _canturn;
@@ -21,7 +20,6 @@ public class character : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		_controller = GetComponent<CharacterController> ();
 		_targetmove = transform.position;
 		_targetmove.y = 1.0f;
 	}
@@ -33,10 +31,6 @@ public class character : MonoBehaviour {
 		move ();
 		turn ();
 
-		_moveVector *= Time.deltaTime;
-		_controller.Move (_moveVector);
-		_moveVector.y = 0;
-		transform.LookAt (transform.position + _moveVector);
 	}
 
 	void FixedUpdate(){
@@ -66,7 +60,7 @@ public class character : MonoBehaviour {
 		if (_cancontrol) {
 			
 			if (Input.GetKeyDown (KeyCode.W)) {
-
+				AudioManager.instance.PlaySound2D("footsteps_metal");
 				_targetmove = transform.position + transform.forward * 2;
 				_cancontrol = false;
 			}

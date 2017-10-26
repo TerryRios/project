@@ -14,6 +14,7 @@ public class Doors : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if (col.gameObject.tag == "Player") {
+			AudioManager.instance.PlaySound("door_open",transform.position);
 			doorOpen = true;
 			DoorsControl ("Open");
 		}
@@ -21,6 +22,7 @@ public class Doors : MonoBehaviour {
 
 	void OnTriggerExit(Collider col){
 		if (doorOpen) {
+			AudioManager.instance.PlaySound("door_close",transform.position);
 			doorOpen = false;
 			DoorsControl ("Close");
 		}
