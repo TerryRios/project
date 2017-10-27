@@ -16,21 +16,20 @@ public class character : MonoBehaviour {
 	private float targetAngle;
 	private bool hasKey = false;
 	public bool isTalking;
+	public LayerMask _mask;
 
 	// Use this for initialization
 	void Start ()
 	{
 		_targetmove = transform.position;
 		_targetmove.y = 1.0f;
-	}
-		
+	}		
 
 	// Update is called once per frame
 	void Update () {
 		
 		move ();
 		turn ();
-
 	}
 
 	void FixedUpdate(){
@@ -42,6 +41,7 @@ public class character : MonoBehaviour {
 		} else {
 			_cancontrol = true;
 		}
+			
 	}
 
 	void OnTriggerEnter(Collider other){
