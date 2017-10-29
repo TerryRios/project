@@ -10,7 +10,7 @@ public class fin_script : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		if (other.gameObject.tag == "Player") {
 			Color alpha= playercanvas.color;
-			alpha.a = 1;
+			alpha.a = Mathf.Lerp(0,1.0f,5*Time.deltaTime);
 			playercanvas.color = alpha;
 		}
 	}
