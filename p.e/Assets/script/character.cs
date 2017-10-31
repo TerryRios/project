@@ -14,9 +14,12 @@ public class character : MonoBehaviour {
 	public Vector3 _targetmove;
 	private bool _canturn;
 	private float targetAngle;
-	private bool hasKey = false;
+	public bool hasKey1 = false;
+	public bool hasKey2 = false;
+	public bool toOpenDoor1 = false;
+	public bool toOpenDoor2 = false;
+	public bool engineisOn = false;
 	public bool isTalking;
-	public LayerMask _mask;
 
 	// Use this for initialization
 	void Start ()
@@ -33,7 +36,8 @@ public class character : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-
+		
+		RaycastHit hit;
 		Vector3 detect = (transform.TransformDirection(Vector3.forward));
 
 		if (Physics.Raycast (transform.position, detect, 2.9f)) {
@@ -41,13 +45,38 @@ public class character : MonoBehaviour {
 		} else {
 			_cancontrol = true;
 		}
-			
-	}
+		if (Input.GetKeyDown (KeyCode.F)) {
+			if (Physics.Raycast (transform.position, detect, out hit)) {
 
-	void OnTriggerEnter(Collider other){
-		if (other.gameObject.tag == "key") {
-				hasKey = true;
-				Destroy (other.gameObject);
+				if (hit.collider.gameObject.CompareTag ("llave1")) {
+					AudioManager.instance.PlaySound2D ("flip_card");
+					hit.collider.gameObject.SetActive (false);
+					hasKey1 = true;						
+				}
+				if (hit.collider.gameObject.CompareTag ("llave2")) {
+					AudioManager.instance.PlaySound2D ("flip_card");
+					hit.collider.gameObject.SetActive (false);
+					hasKey2 = true;
+				}
+				if (hit.collider.gameObject.CompareTag ("cardreader1")&&hasKey1 == true) {
+					AudioManager.instance.PlaySound2D ("card_beep");
+					toOpenDoor1 = true;
+					hit.collider.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+				}
+				if (hit.collider.gameObject.CompareTag ("cardreader2")&&hasKey2 == true) {
+					AudioManager.instance.PlaySound2D ("card_beep");
+					toOpenDoor2 = true;
+					hit.collider.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+				}
+				if (hit.collider.gameObject.CompareTag ("generator")) {
+					AudioManager.instance.PlaySound ("button_sound", hit.collider.gameObject.transform.position);
+					engineisOn = true;
+					hit.collider.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+				}
+				if (hit.collider.gameObject.CompareTag ("stair1")) {
+					transform.position = new Vector3 (5, 1, -7);
+				}
+			}
 		}
 	}
 

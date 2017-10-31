@@ -6,10 +6,19 @@ public class Doors : MonoBehaviour {
 
 	Animator animator;
 	bool doorOpen;
+	public character _character;
+	private BoxCollider _box;
 
 	void Start(){
 		doorOpen = false;
 		animator = GetComponent<Animator> ();
+		_box = GetComponent<BoxCollider> ();
+	}
+
+	void Update () {
+		if (_character.toOpenDoor1 == true&&_character.toOpenDoor2==true) {
+			_box.enabled = true;
+		}
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -18,6 +27,7 @@ public class Doors : MonoBehaviour {
 			doorOpen = true;
 			DoorsControl ("Open");
 		}
+
 	}
 
 	void OnTriggerExit(Collider col){
