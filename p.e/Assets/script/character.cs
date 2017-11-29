@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class character : MonoBehaviour {
 
-	public float _speed = 1;
-	public bool _cancontrol = true;
-	public Vector3 _moveVector;
-	private bool _iscrouched;
-	[System.NonSerialized]
-	public float _verticalSpeed = 0;
-	private float angle;
-	public Vector3 _targetmove;
-	private bool _canturn;
-	private float targetAngle;
+//	public bool _cancontrol = true;
+//	private float angle;
+//	public Vector3 _targetmove;
+//	private bool _canmove;
+//	private float targetAngle;
 	public bool hasKey1 = false;
 	public bool hasKey2 = false;
 	public bool toOpenDoor1 = false;
@@ -24,38 +19,42 @@ public class character : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		_targetmove = transform.position;
-		_targetmove.y = 1.0f;
+//		_targetmove = transform.position;
+//		_targetmove.y = 1.0f;
 	}		
 
 	// Update is called once per frame
 	void Update () {
 		
-		move ();
-		turn ();
+//		move ();
+//		turn ();
 	}
 
 	void FixedUpdate(){
-		
+
 		RaycastHit hit;
 		Vector3 detect = (transform.TransformDirection(Vector3.forward));
 
+/*
 		if (Physics.Raycast (transform.position, detect, 2.9f)) {
-			_cancontrol = false;
-		} else {
-			_cancontrol = true;
+		    Debug.DrawLine (transform.position, detect, Color.red);
+			_canmove = false;
+	   } else {
+	        Debug.DrawLine (transform.position, detect, Color.green);
+			_canmove = true;
 		}
-		if (Input.GetKeyDown (KeyCode.F)) {
-			if (Physics.Raycast (transform.position, detect, out hit)) {
+*/			
+		if (Physics.Raycast (transform.position, detect, out hit,1.5f)) {
+			if (Input.GetKeyDown (KeyCode.F)) {
 
 				if (hit.collider.gameObject.CompareTag ("llave1")) {
 					AudioManager.instance.PlaySound2D ("flip_card");
-					hit.collider.gameObject.SetActive (false);
+					Destroy(hit.collider.gameObject);
 					hasKey1 = true;						
 				}
 				if (hit.collider.gameObject.CompareTag ("llave2")) {
 					AudioManager.instance.PlaySound2D ("flip_card");
-					hit.collider.gameObject.SetActive (false);
+					Destroy(hit.collider.gameObject);
 					hasKey2 = true;
 				}
 				if (hit.collider.gameObject.CompareTag ("cardreader1")&&hasKey1 == true) {
@@ -79,34 +78,30 @@ public class character : MonoBehaviour {
 			}
 		}
 	}
-
+/*
 	void move(){
 
 		if (isTalking) {
 			return;
 		}
 
-		if (_cancontrol) {
+		if (_cancontrol&&_canmove) {
 			
 			if (Input.GetKeyDown (KeyCode.W)) {
-				AudioManager.instance.PlaySound2D("footsteps_metal");
+				
 				_targetmove = transform.position + transform.forward * 2;
 				_cancontrol = false;
 			}
 		}
-
-		if (transform.position != _targetmove) {
+		if (transform.position != _targetmove) {			
 			if (Vector3.Distance (transform.position, _targetmove) > 0.1f) {
-
 				transform.position += (transform.forward * Time.deltaTime*5);
-
-			} else {			
+			} else {	
+				AudioManager.instance.PlaySound2D("footsteps_metal");
 				transform.position = _targetmove;
 				_cancontrol = true;
 			}
 		}
-
-
 	}
 		
 	void turn(){
@@ -115,20 +110,20 @@ public class character : MonoBehaviour {
 			return;
 		}
 
-		if (_canturn) {
+		if (_cancontrol) {
 
 			if (Input.GetButtonDown ("izquierdo")) {
 
 				targetAngle += -90;
-				_canturn = false;
+				_cancontrol = false;
 			}
 
 			if (Input.GetButtonDown ("derecho")) {
 
 				targetAngle += 90;
-				_canturn = false;
+				_cancontrol = false;
 			}							
-		}					 										
+		}	
 
 	   if (Mathf.Abs(targetAngle - angle)>5.0f) {
 			
@@ -143,9 +138,12 @@ public class character : MonoBehaviour {
 	}
 		if (Mathf.Abs (targetAngle - angle) < 5.0f) {
 			angle = targetAngle;
-			_canturn = true;	
+			_cancontrol = true;	
 		}
 
 		transform.rotation = Quaternion.Euler (0, angle, 0);
 	}
+*/
+
+
 }
