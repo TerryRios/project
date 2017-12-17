@@ -44,8 +44,8 @@ public class AudioManager : MonoBehaviour {
 			newSfx2DSource.transform.parent = transform;
 
 			audioListener = FindObjectOfType<AudioListener> ().transform;
-			if (FindObjectOfType<character> () != null) {
-				playerT = FindObjectOfType<character> ().transform;
+			if (FindObjectOfType<movement> () != null) {
+				playerT = FindObjectOfType<movement> ().transform;
 			}
 			masterVolumePercent = PlayerPrefs.GetFloat ("master vol",1);
 			sfxVolumePercent = PlayerPrefs.GetFloat ("sfx vol", 1);

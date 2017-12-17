@@ -26,12 +26,16 @@ public class EnemyStateMachine : MonoBehaviour {
 	//alive
 	private bool alive = true;
 
-	// Use this for initialization
-	void Start () {
-		currentState = TurnState.Processing;
-		Selector.SetActive (false);
-		BSM = GameObject.Find ("BattleManager").GetComponent<battlestatemachine> ();
-		startposition = transform.position;
+	void OnEnable(){
+		if (Gamemanager.instance.Atacado == true) {
+			currentState = TurnState.Processing;
+			Selector.SetActive (false);
+			BSM = GameObject.Find ("BattleManager").GetComponent<battlestatemachine> ();
+			startposition = transform.position;
+		}
+	}
+	void OnDisable(){
+		this.gameObject.tag = "Enemy";
 	}
 	
 	// Update is called once per frame
@@ -63,12 +67,15 @@ public class EnemyStateMachine : MonoBehaviour {
 				//disable selector
 				Selector.SetActive (false);
 				if (BSM.enemysinBattle.Count > 0) {
+			
 					for (int i = 0; i < BSM.PerformList.Count; i++) {
-						if (BSM.PerformList [i].attackersGameObject == this.gameObject) {
-							BSM.PerformList.Remove (BSM.PerformList [i]);
-						}
-						if (BSM.PerformList [i].attackersTarget == this.gameObject) {
-							BSM.PerformList [i].attackersTarget = BSM.enemysinBattle [Random.Range (0, BSM.enemysinBattle.Count)];
+						if (i != 0) {
+							if (BSM.PerformList [i].attackersGameObject == this.gameObject) {
+								BSM.PerformList.Remove (BSM.PerformList [i]);
+							}
+							if (BSM.PerformList [i].attackersTarget == this.gameObject) {
+								BSM.PerformList [i].attackersTarget = BSM.enemysinBattle [Random.Range (0, BSM.enemysinBattle.Count)];
+							}
 						}
 					}
 				}

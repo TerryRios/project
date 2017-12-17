@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class engineScript : MonoBehaviour {
 
-	public character _character;
+	public movement _character;
 	public GameObject _reader1;
 	public GameObject _reader2;
 

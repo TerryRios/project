@@ -12,13 +12,7 @@ public class fade : MonoBehaviour {
 
 	private float alpha = 1f;
 	private float fadeDir = -1f;
-
-	// Use this for initialization
-	void Start () {
-
-	}
-
-
+		
 	void OnGUI() {
 
 		alpha += fadeDir * fadespeed * (Time.deltaTime);

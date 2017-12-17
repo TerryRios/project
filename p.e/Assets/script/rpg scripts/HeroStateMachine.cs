@@ -41,14 +41,17 @@ public class HeroStateMachine : MonoBehaviour {
 		//crear panel,colocar informacion
 		createCharacterPanel();
 
-		startPosition = transform.position;
 		cur_cooldown = Random.Range (0, 2.5f);
 		BSM = GameObject.Find ("BattleManager").GetComponent<battlestatemachine> ();
 		currentState = TurnState.Processing;
-	}
-	
+	}	
 	// Update is called once per frame
 	void Update () {
+		LevelUp ();
+		stats.level.text = "Lv. " + _character.Lvl.ToString("00");
+		if (Gamemanager.instance.Atacado == true) {
+			startPosition = transform.position;
+		}
 		switch (currentState) {
 		case(TurnState.Processing):
 			upgradeProgressBar();
@@ -82,15 +85,16 @@ public class HeroStateMachine : MonoBehaviour {
 				//remove item from perform list
 				if (BSM.charactersinBattle.Count > 0) {
 					for (int i = 0; i < BSM.PerformList.Count; i++) {
-						if (BSM.PerformList [i].attackersGameObject == this.gameObject) {
-							BSM.PerformList.Remove (BSM.PerformList [i]);
-						}
-						if (BSM.PerformList [i].attackersTarget == this.gameObject) {
-							BSM.PerformList [i].attackersTarget = BSM.charactersinBattle [Random.Range (0, BSM.charactersinBattle.Count)];
+						if (i != 0) {
+							if (BSM.PerformList [i].attackersGameObject == this.gameObject) {
+								BSM.PerformList.Remove (BSM.PerformList [i]);
+							}
+							if (BSM.PerformList [i].attackersTarget == this.gameObject) {
+								BSM.PerformList [i].attackersTarget = BSM.charactersinBattle [Random.Range (0, BSM.charactersinBattle.Count)];
+							}
 						}
 					}
 				}
-
 				//change color / play animation
 	
 				//reset heroinput
@@ -99,9 +103,10 @@ public class HeroStateMachine : MonoBehaviour {
 			}
 			break;
 		}
+
 	}
 	void upgradeProgressBar(){
-		cur_cooldown = cur_cooldown + Time.deltaTime;
+		cur_cooldown = cur_cooldown + Gamemanager.instance.C_battleBar*Time.deltaTime;
 		float calc_cooldown = cur_cooldown / max_cooldown;
 		progressBar.fillAmount = Mathf.Clamp (calc_cooldown, 0, 1);
 		if (cur_cooldown >= max_cooldown) {
@@ -113,7 +118,6 @@ public class HeroStateMachine : MonoBehaviour {
 			yield break;
 		}
 		actionStarted = true;
-
 		//animar al personaje cerca del enemigo para atacar
 	//	Vector3 enemyPosition = new Vector3(enemytoAttack.transform.position.x+0.5f,enemytoAttack.transform.position.y,enemytoAttack.transform.position.z);
 	//	while (MoveTowardsEnemy (enemyPosition)) {yield return null;}
@@ -136,8 +140,7 @@ public class HeroStateMachine : MonoBehaviour {
 			currentState = TurnState.waiting;
 		}
 		//finalizar co-rutina
-		actionStarted = false;
-	
+		actionStarted = false;	
 	}
 	private bool MoveTowardsEnemy(Vector3 target){
 		return target != (transform.position = Vector3.MoveTowards (transform.position, target, animSpeed * Time.deltaTime));
@@ -163,16 +166,23 @@ public class HeroStateMachine : MonoBehaviour {
 		characterPanel = Instantiate (characterPanel) as GameObject;
 		stats = characterPanel.GetComponent<characterpanelstats> ();
 		stats.characterName.text = _character.thename;
-		stats.characterHP.text = "HP: " + _character.curHP;
-		stats.characterMP.text = "MP: " + _character.CurMP;
+		stats.characterHP.text = "HP: " +_character.baseHP+ "/"+ _character.curHP;
+		stats.characterMP.text = "MP: " +_character.baseMP+"/"+ _character.CurMP;
 
 		progressBar = stats.progressBar;
 		characterPanel.transform.SetParent (characterPanelSpacer, false);
 	}
 	//actualiza stats del daño / curacion
 	void UpdateCharacterPanel(){
-		stats.characterHP.text = "HP: " + _character.curHP;
-		stats.characterMP.text = "MP: " + _character.CurMP;
+		stats.characterHP.text = "HP: " +_character.baseHP+ "/"+ _character.curHP;
+		stats.characterMP.text = "MP: " +_character.baseMP+"/"+ _character.CurMP;
+	}
 
+	void LevelUp(){
+		if (_character.XP == _character.XPrequired) {
+			_character.XP = 0;
+			_character.XPrequired += (_character.XPrequired * 3) -_character.XPrequired / 2;
+			_character.Lvl ++;
+		}
 	}
 }

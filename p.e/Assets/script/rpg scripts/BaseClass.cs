@@ -16,5 +16,9 @@ public class BaseClass {
 	public float baseDEF;
 	public float curDEF;
 
+	public int XP;
+	public int XPrequired;
+	public int Lvl;
+
 	public List<BaseAttack> Attacks = new List<BaseAttack> ();
 }

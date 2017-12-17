@@ -36,6 +36,8 @@ public class battlestatemachine : MonoBehaviour {
 	public GameObject enemyButton;
 	public Transform Spacer;
 
+	private GameObject battlecanvas; 
+
 	public GameObject attackPanel;
 	public GameObject EnemySelect;
 	public GameObject SkillsPanel;
@@ -50,18 +52,35 @@ public class battlestatemachine : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		battlestates = performAction.wait;
-		enemysinBattle.AddRange (GameObject.FindGameObjectsWithTag ("Enemy"));
-		charactersinBattle.AddRange (GameObject.FindGameObjectsWithTag ("Player c"));
-		characterInput = characterGUI.activate;
+		
+		battlecanvas = GameObject.Find ("BattleCanvas");
+		Spacer = battlecanvas.transform.GetChild (4).transform.GetChild (0).transform;
+		attackPanel = battlecanvas.transform.GetChild (3).gameObject;
 		attackPanel.SetActive (false);
+		EnemySelect = battlecanvas.transform.GetChild (4).gameObject;
 		EnemySelect.SetActive (false);
+		SkillsPanel = battlecanvas.transform.GetChild (5).gameObject;
 		SkillsPanel.SetActive (false);
-		EnemyButtons ();
+		actionSpacer = battlecanvas.transform.GetChild (3).transform.GetChild (0).transform;
+		Skillspacer = battlecanvas.transform.GetChild (5).transform.GetChild (0).transform;
+
+		battlestates = performAction.wait;
+		charactersinBattle.AddRange (GameObject.FindGameObjectsWithTag ("Player c"));
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (Gamemanager.instance.detectE == true) {
+			enemysinBattle.AddRange (GameObject.FindGameObjectsWithTag ("Enemy"));
+			characterInput = characterGUI.activate;
+			attackPanel.SetActive (false);
+			EnemySelect.SetActive (false);
+			SkillsPanel.SetActive (false);
+			EnemyButtons ();
+			Gamemanager.instance.noEnemys = false;
+			Gamemanager.instance.detectE = false;
+		}	
+		
 		switch (battlestates) 
 		{
 		case(performAction.wait):
@@ -106,7 +125,7 @@ public class battlestatemachine : MonoBehaviour {
 				//lose
 			} else if (enemysinBattle.Count < 1) 
 			{
-
+				Gamemanager.instance.noEnemys = true;
 				battlestates = performAction.win;
 				//win
 			} else 

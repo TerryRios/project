@@ -8,5 +8,6 @@ public class characterpanelstats : MonoBehaviour {
 	public Text characterName;
 	public Text characterHP;
 	public Text characterMP;
+	public Text level;
 	public Image progressBar;
 }

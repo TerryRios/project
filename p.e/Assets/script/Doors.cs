@@ -6,7 +6,7 @@ public class Doors : MonoBehaviour {
 
 	Animator animator;
 	bool doorOpen;
-	public character _character;
+	public movement _character;
 	private BoxCollider _box;
 
 	void Start(){
@@ -22,7 +22,7 @@ public class Doors : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		if (col.gameObject.tag == "Player") {
+		if (col.gameObject.CompareTag("Player")) {
 			AudioManager.instance.PlaySound("door_open",transform.position);
 			doorOpen = true;
 			DoorsControl ("Open");

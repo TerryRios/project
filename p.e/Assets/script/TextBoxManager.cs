@@ -14,7 +14,7 @@ public class TextBoxManager : MonoBehaviour {
 
 	public int currentLine;
 	public int endAtLine;
-	public character player;
+	public movement player;
 
 	public bool isActive;
 	public bool stopPlayerMove;
@@ -27,7 +27,7 @@ public class TextBoxManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		player = FindObjectOfType<character> ();
+		player = FindObjectOfType<movement> ();
 
 		if (textFile != null) {
 			textLines = (textFile.text.Split("/n"[0])); 

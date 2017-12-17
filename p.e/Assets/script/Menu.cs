@@ -8,13 +8,32 @@ public class Menu : MonoBehaviour {
 
 	public GameObject mainMenuHolder;
 	public GameObject optionsMenuHolder;
+	public Dropdown resolutionDropdown;
 
 	public Slider[] volumeSliders;
+	public Resolution[] resolutions;
 	public Toggle[] resolutionToggles;
 	public int[] screenWidths;
 	int activeScreenResIndex;
 
 	void Start(){
+		resolutions = Screen.resolutions;
+		resolutionDropdown.ClearOptions ();
+		List<string> options = new List<string> ();
+		int currentResolutionIndex = 0;
+		for (int i = 0; i < resolutions.Length; i++) {
+			string option = resolutions [i].width + " x " + resolutions[i].height;
+			options.Add (option);
+			if (resolutions[i].width == Screen.currentResolution.width&&
+				resolutions[i].height == Screen.currentResolution.height) {
+				currentResolutionIndex = i;
+			}
+		}
+
+		resolutionDropdown.AddOptions (options);
+		resolutionDropdown.value = currentResolutionIndex;
+		resolutionDropdown.RefreshShownValue ();
+
 		activeScreenResIndex = PlayerPrefs.GetInt("screen res index");
 		bool isFullscreen = (PlayerPrefs.GetInt("fullscreen") == 1)?true:false;
 
@@ -75,6 +94,10 @@ public class Menu : MonoBehaviour {
 	}
 	public void SetSfxVolume(float value){
 		AudioManager.instance.SetVolume (value, AudioManager.AudioChannel.Sfx);	
+	}
+	public void SetResolution(int resolutionIndex){
+		Resolution resolution = resolutions [resolutionIndex];
+		Screen.SetResolution (resolution.width, resolution.height, Screen.fullScreen);
 	}
 
 }
